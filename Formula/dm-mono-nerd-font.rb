@@ -4,7 +4,7 @@ class DmMonoNerdFont < Formula
   version "3.4.0"
 
   url "https://github.com/kilork/dm-mono-nerd-font/releases/download/v3.4.0/dm-mono-nerd-font-3.4.0.tar.gz"
-  sha256 "f47243c7716570ee33a049b6562ddf5603056105607ceef92f742b0bb7e35062"
+  sha256 "47070cf02c43415cb3b67a13e13a48f55201de47f800809e11c51b1181f3cb03"
 
   def install
     system "tar", "-xzf", cached_download, "--strip-components=1", "-C", prefix
