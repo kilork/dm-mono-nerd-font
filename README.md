@@ -1,18 +1,61 @@
-# Summary
+# DM Mono Nerd Font
 
 Apply the [Nerd Fonts Patcher](https://github.com/ryanoasis/nerd-fonts) on the [DM Mono](https://github.com/googlefonts/dm-mono) font for a [powerlevel10k](https://github.com/romkatv/powerlevel10k) compliant font.
 
 ![preview](./preview.png)
 
-# Usage
-* Download patched fonts from the subdirectory [dm-mono-nerd-font](https://github.com/minhuw/dm-mono-nerd-font/tree/main/dm-mono-nerd-font).
+## Installation
 
-* Patch manually from sources (see [nerd font's document](https://github.com/ryanoasis/nerd-fonts#font-patcher) for more details):
+### macOS
+
+#### Homebrew (Recommended)
+```bash
+brew tap kilork/dm-mono-nerd-font
+brew install --cask kilork/dm-mono-nerd-font/dm-mono-nerd-font
+```
+
+#### Manual
+Download fonts from [Releases](https://github.com/kilork/dm-mono-nerd-font/releases) and double-click to install, or copy to `~/Library/Fonts/`.
+
+### Linux
+
+#### Install Script (Recommended)
+```bash
+curl -fsSL https://raw.githubusercontent.com/kilork/dm-mono-nerd-font/main/install.sh | bash
+```
+
+#### Manual
+Download fonts from [Releases](https://github.com/kilork/dm-mono-nerd-font/releases) and copy to `~/.local/share/fonts/` or `/usr/local/share/fonts/`.
 
 ```bash
-git clone https://github.com/minhuw/dm-mono-nerd-font
-cd dm-mono-nerd-font
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts
+curl -LO https://github.com/kilork/dm-mono-nerd-font/releases/download/v3.4.0/dm-mono-nerd-font-3.4.0.tar.gz
+tar -xzf dm-mono-nerd-font-3.4.0.tar.gz
+rm dm-mono-nerd-font-3.4.0.tar.gz
+fc-cache -f -v
+```
 
+### Windows
+
+Download fonts from [Releases](https://github.com/kilork/dm-mono-nerd-font/releases) and:
+1. Double-click each `.ttf` file to install
+2. Or right-click → Install for all users
+
+## Available Fonts
+
+- DM Mono Italic Nerd Font Complete
+- DM Mono Light Italic Nerd Font Complete
+- DM Mono Light Nerd Font Complete
+- DM Mono Medium Italic Nerd Font Complete
+- DM Mono Medium Nerd Font Complete
+- DM Mono Regular Nerd Font Complete
+
+## Build from Source
+
+```bash
+git clone https://github.com/kilork/dm-mono-nerd-font
+cd dm-mono-nerd-font
 git submodule update --init --recursive
 
 for file in dm-mono/exports/DMMono*.ttf; do
@@ -20,7 +63,8 @@ for file in dm-mono/exports/DMMono*.ttf; do
 done
 ```
 
-# Related Projects
-* dm-mono: https://github.com/googlefonts/dm-mono
-* nerd-fonts: https://github.com/ryanoasis/nerd-fonts
-* powerlevel10k: https://github.com/romkatv/powerlevel10k
+## Related Projects
+
+- [DM Mono](https://github.com/googlefonts/dm-mono)
+- [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts)
+- [powerlevel10k](https://github.com/romkatv/powerlevel10k)
