@@ -51,9 +51,7 @@ jobs:
       - name: Create tarball
         run: |
           VERSION="${GITHUB_REF#refs/tags/v}"
-          mkdir -p "dm-mono-nerd-font-${VERSION}"
-          cp fonts/*.ttf "dm-mono-nerd-font-${VERSION}/"
-          tar -czf "dm-mono-nerd-font-${VERSION}.tar.gz" "dm-mono-nerd-font-${VERSION}"
+          tar -czf "dm-mono-nerd-font-${VERSION}.tar.gz" fonts/
           echo "SHA256=$(sha256sum dm-mono-nerd-font-${VERSION}.tar.gz | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Create Release
@@ -88,11 +86,12 @@ jobs:
           rm -rf /tmp/homebrew-tap
           git clone https://github.com/kilork/homebrew-dm-mono-nerd-font.git /tmp/homebrew-tap
           
-          cp Formula/dm-mono-nerd-font.rb /tmp/homebrew-tap/Formula/dm-mono-nerd-font.rb
+          mkdir -p /tmp/homebrew-tap/Casks
+          printf 'cask "dm-mono-nerd-font" do\n  version "%s"\n  sha256 "%s"\n\n  url "https://github.com/kilork/dm-mono-nerd-font/releases/download/v%s/dm-mono-nerd-font-%s.tar.gz"\n  name "DM Mono Nerd Font"\n  homepage "https://github.com/kilork/dm-mono-nerd-font"\n\n  font "DM Mono Italic Nerd Font Complete.ttf"\n  font "DM Mono Light Italic Nerd Font Complete.ttf"\n  font "DM Mono Light Nerd Font Complete.ttf"\n  font "DM Mono Medium Italic Nerd Font Complete.ttf"\n  font "DM Mono Medium Nerd Font Complete.ttf"\n  font "DM Mono Regular Nerd Font Complete.ttf"\n  font "DMMonoNerdFont-Italic.ttf"\n  font "DMMonoNerdFont-Light.ttf"\n  font "DMMonoNerdFont-LightItalic.ttf"\n  font "DMMonoNerdFont-Medium.ttf"\n  font "DMMonoNerdFont-MediumItalic.ttf"\n  font "DMMonoNerdFont-Regular.ttf"\nend\n' "$VERSION" "$SHA256" "$VERSION" "$VERSION" > /tmp/homebrew-tap/Casks/dm-mono-nerd-font.rb
           
           cd /tmp/homebrew-tap
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add Formula/dm-mono-nerd-font.rb
-          git commit -m "Update formula to v${VERSION}" || echo "No changes to commit"
+          git add Casks/dm-mono-nerd-font.rb
+          git commit -m "Update cask to v${VERSION}" || echo "No changes to commit"
           git push
