@@ -78,20 +78,35 @@ jobs:
           git push
 
       - name: Update Homebrew tap
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${GITHUB_REF#refs/tags/v}"
           
-          rm -rf /tmp/homebrew-tap
-          git clone https://github.com/kilork/homebrew-dm-mono-nerd-font.git /tmp/homebrew-tap
+          CASK_CONTENT=$(cat << 'CASKEOF'
+cask "dm-mono-nerd-font" do
+  version "VERSION_PLACEHOLDER"
+  sha256 "SHA256_PLACEHOLDER"
+
+  url "https://github.com/kilork/dm-mono-nerd-font/releases/download/vVERSION_PLACEHOLDER/dm-mono-nerd-font-VERSION_PLACEHOLDER.tar.gz"
+  name "DM Mono Nerd Font"
+  homepage "https://github.com/kilork/dm-mono-nerd-font"
+
+  font "dm-mono-nerd-font/DM Mono Italic Nerd Font Complete.ttf"
+  font "dm-mono-nerd-font/DM Mono Light Italic Nerd Font Complete.ttf"
+  font "dm-mono-nerd-font/DM Mono Light Nerd Font Complete.ttf"
+  font "dm-mono-nerd-font/DM Mono Medium Italic Nerd Font Complete.ttf"
+  font "dm-mono-nerd-font/DM Mono Medium Nerd Font Complete.ttf"
+  font "dm-mono-nerd-font/DM Mono Regular Nerd Font Complete.ttf"
+  font "dm-mono-nerd-font/DMMonoNerdFont-Italic.ttf"
+  font "dm-mono-nerd-font/DMMonoNerdFont-Light.ttf"
+  font "dm-mono-nerd-font/DMMonoNerdFont-LightItalic.ttf"
+  font "dm-mono-nerd-font/DMMonoNerdFont-Medium.ttf"
+  font "dm-mono-nerd-font/DMMonoNerdFont-MediumItalic.ttf"
+  font "dm-mono-nerd-font/DMMonoNerdFont-Regular.ttf"
+end
+CASKEOF
+          )
           
-          mkdir -p /tmp/homebrew-tap/Casks
-          printf 'cask "dm-mono-nerd-font" do\n  version "%s"\n  sha256 "%s"\n\n  url "https://github.com/kilork/dm-mono-nerd-font/releases/download/v%s/dm-mono-nerd-font-%s.tar.gz"\n  name "DM Mono Nerd Font"\n  homepage "https://github.com/kilork/dm-mono-nerd-font"\n\n  font "dm-mono-nerd-font/DM Mono Italic Nerd Font Complete.ttf"\n  font "dm-mono-nerd-font/DM Mono Light Italic Nerd Font Complete.ttf"\n  font "dm-mono-nerd-font/DM Mono Light Nerd Font Complete.ttf"\n  font "dm-mono-nerd-font/DM Mono Medium Italic Nerd Font Complete.ttf"\n  font "dm-mono-nerd-font/DM Mono Medium Nerd Font Complete.ttf"\n  font "dm-mono-nerd-font/DM Mono Regular Nerd Font Complete.ttf"\n  font "dm-mono-nerd-font/DMMonoNerdFont-Italic.ttf"\n  font "dm-mono-nerd-font/DMMonoNerdFont-Light.ttf"\n  font "dm-mono-nerd-font/DMMonoNerdFont-LightItalic.ttf"\n  font "dm-mono-nerd-font/DMMonoNerdFont-Medium.ttf"\n  font "dm-mono-nerd-font/DMMonoNerdFont-MediumItalic.ttf"\n  font "dm-mono-nerd-font/DMMonoNerdFont-Regular.ttf"\nend\n' "$VERSION" "$SHA256" "$VERSION" "$VERSION" > /tmp/homebrew-tap/Casks/dm-mono-nerd-font.rb
+          CASK_CONTENT="${CASK_CONTENT//VERSION_PLACEHOLDER/$VERSION}"
+          CASK_CONTENT="${CASK_CONTENT//SHA256_PLACEHOLDER/$SHA256}"
           
-          cd /tmp/homebrew-tap
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add Casks/dm-mono-nerd-font.rb
-          git commit -m "Update cask to v${VERSION}" || echo "No changes to commit"
-          git push
+          echo "$CASK_CONTENT" | base64 -w0 | gh api repos/kilork/homebrew-dm-mono-nerd-font/contents/Casks/dm-mono-nerd-font.rb -X PUT -F message="Update cask to v${VERSION}" -F committer.name="GitHub Action" -F committer.email="action@github.com" -F content=@-
