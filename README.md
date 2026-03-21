@@ -10,7 +10,6 @@ Apply the [Nerd Fonts Patcher](https://github.com/ryanoasis/nerd-fonts) on the [
 
 #### Homebrew (Recommended)
 ```bash
-brew tap kilork/dm-mono-nerd-font
 brew install --cask kilork/dm-mono-nerd-font/dm-mono-nerd-font
 ```
 
