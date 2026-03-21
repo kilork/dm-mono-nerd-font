@@ -78,3 +78,21 @@ jobs:
           git add Formula/dm-mono-nerd-font.rb
           git commit -m "Update formula to v${VERSION}" || echo "No changes to commit"
           git push
+
+      - name: Update Homebrew tap
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          
+          rm -rf /tmp/homebrew-tap
+          git clone https://github.com/kilork/homebrew-dm-mono-nerd-font.git /tmp/homebrew-tap
+          
+          cp Formula/dm-mono-nerd-font.rb /tmp/homebrew-tap/Formula/dm-mono-nerd-font.rb
+          
+          cd /tmp/homebrew-tap
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add Formula/dm-mono-nerd-font.rb
+          git commit -m "Update formula to v${VERSION}" || echo "No changes to commit"
+          git push

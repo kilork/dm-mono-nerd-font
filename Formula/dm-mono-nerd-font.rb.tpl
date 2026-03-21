@@ -1,4 +1,4 @@
-class DmMonoNerdFont
+class DmMonoNerdFont < Formula
   desc "DM Mono with Nerd Fonts glyphs"
   homepage "https://github.com/kilork/dm-mono-nerd-font"
   version "{{VERSION}}"
@@ -7,12 +7,15 @@ class DmMonoNerdFont
   sha256 "{{SHA256}}"
 
   def install
-    font_dir = Pathname.new(ENV["HOME"])/"Library/Fonts"
-    font_dir.mkpath
+    system "tar", "-xzf", cached_download, "--strip-components=1", "-C", prefix
+  end
 
-    Dir["*.ttf"].each do |font|
-      cp font, font_dir
-    end
+  def caveats
+    <<~EOS
+      Fonts are installed to #{prefix}.
+      To make them available system-wide, copy to ~/Library/Fonts:
+        cp #{prefix}/*.ttf ~/Library/Fonts/
+    EOS
   end
 
   test do
