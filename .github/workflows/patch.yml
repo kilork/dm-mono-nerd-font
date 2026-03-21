@@ -1,0 +1,76 @@
+name: Patch and Release Fonts
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    container: ubuntu:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y fontforge wget
+
+      - name: Patch fonts
+        run: |
+          chmod +x patch.sh
+          ./patch.sh
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fonts
+          path: dm-mono-nerd-font/*.ttf
+
+  release:
+    needs: patch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: fonts
+          path: fonts
+
+      - name: Create tarball
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          mkdir -p "dm-mono-nerd-font-${VERSION}"
+          cp fonts/*.ttf "dm-mono-nerd-font-${VERSION}/"
+          tar -czf "dm-mono-nerd-font-${VERSION}.tar.gz" "dm-mono-nerd-font-${VERSION}"
+          echo "SHA256=$(sha256sum dm-mono-nerd-font-${VERSION}.tar.gz | cut -d' ' -f1)" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            fonts/*.ttf
+            dm-mono-nerd-font-*.tar.gz
+          generate_release_notes: true
+
+      - name: Update Homebrew formula
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          
+          cp Formula/dm-mono-nerd-font.rb.tpl Formula/dm-mono-nerd-font.rb
+          sed -i "s/{{VERSION}}/$VERSION/g; s/{{SHA256}}/${SHA256}/g" Formula/dm-mono-nerd-font.rb
+          
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add Formula/dm-mono-nerd-font.rb
+          git commit -m "Update formula to v${VERSION}" || echo "No changes to commit"
+          git push
