@@ -57,10 +57,11 @@ git clone https://github.com/kilork/dm-mono-nerd-font
 cd dm-mono-nerd-font
 git submodule update --init --recursive
 
-for file in dm-mono/exports/DMMono*.ttf; do
-    fontforge -script ./nerd-fonts/font-patcher -c $file -out dm-mono-nerd-font
-done
+chmod +x patch.sh
+./patch.sh
 ```
+
+Output fonts will be in `dm-mono-nerd-font/` directory.
 
 ## Related Projects
 
