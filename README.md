@@ -43,6 +43,12 @@ Download fonts from [Releases](https://github.com/kilork/dm-mono-nerd-font/relea
 
 ## Available Fonts
 
+- DMMono Nerd Font Italic
+- DMMono Nerd Font Light
+- DMMono Nerd Font Light Italic
+- DMMono Nerd Font Medium
+- DMMono Nerd Font Medium Italic
+- DMMono Nerd Font Regular
 - DM Mono Italic Nerd Font Complete
 - DM Mono Light Italic Nerd Font Complete
 - DM Mono Light Nerd Font Complete
