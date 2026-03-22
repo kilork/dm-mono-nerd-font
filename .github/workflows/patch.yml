@@ -67,7 +67,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${GITHUB_REF#refs/tags/v}"
-          gh api repos/kilork/homebrew-dm-mono-nerd-font/dispatch \
+          gh api repos/kilork/homebrew-dm-mono-nerd-font/dispatches \
             -X POST \
             -F event_type="update-cask" \
             -F client_payload[version]="$VERSION" \
