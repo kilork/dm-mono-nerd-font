@@ -63,6 +63,8 @@ jobs:
           generate_release_notes: true
 
       - name: Trigger Homebrew tap update
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${GITHUB_REF#refs/tags/v}"
           gh api repos/kilork/homebrew-dm-mono-nerd-font/dispatch \
