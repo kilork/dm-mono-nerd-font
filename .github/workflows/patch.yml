@@ -61,34 +61,3 @@ jobs:
             fonts/*.ttf
             dm-mono-nerd-font-*.tar.gz
           generate_release_notes: true
-
-      - name: Update Homebrew tap
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION="${GITHUB_REF#refs/tags/v}"
-          
-          # Create cask content using printf
-          CASK_FILE=$(mktemp)
-          printf 'cask "dm-mono-nerd-font" do\n' > "$CASK_FILE"
-          printf '  version "%s"\n' "$VERSION" >> "$CASK_FILE"
-          printf '  sha256 "%s"\n\n' "$SHA256" >> "$CASK_FILE"
-          printf '  url "https://github.com/kilork/dm-mono-nerd-font/releases/download/v%s/dm-mono-nerd-font-%s.tar.gz"\n' "$VERSION" "$VERSION" >> "$CASK_FILE"
-          printf '  name "DM Mono Nerd Font"\n' >> "$CASK_FILE"
-          printf '  homepage "https://github.com/kilork/dm-mono-nerd-font"\n\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DM Mono Italic Nerd Font Complete.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DM Mono Light Italic Nerd Font Complete.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DM Mono Light Nerd Font Complete.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DM Mono Medium Italic Nerd Font Complete.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DM Mono Medium Nerd Font Complete.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DM Mono Regular Nerd Font Complete.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DMMonoNerdFont-Italic.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DMMonoNerdFont-Light.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DMMonoNerdFont-LightItalic.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DMMonoNerdFont-Medium.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DMMonoNerdFont-MediumItalic.ttf"\n' >> "$CASK_FILE"
-          printf '  font "dm-mono-nerd-font/DMMonoNerdFont-Regular.ttf"\n' >> "$CASK_FILE"
-          printf 'end\n' >> "$CASK_FILE"
-          
-          cat "$CASK_FILE" | base64 -w0 | gh api repos/kilork/homebrew-dm-mono-nerd-font/contents/Casks/dm-mono-nerd-font.rb -X PUT -F message="Update cask to v${VERSION}" -F committer.name="GitHub Action" -F committer.email="action@github.com" -F content=@-
-          rm -f "$CASK_FILE"
