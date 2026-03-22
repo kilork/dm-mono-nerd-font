@@ -51,7 +51,8 @@ jobs:
       - name: Create tarball
         run: |
           VERSION="${GITHUB_REF#refs/tags/v}"
-          tar -czf "dm-mono-nerd-font-${VERSION}.tar.gz" fonts/
+          cd fonts && tar -czf ../dm-mono-nerd-font-${VERSION}.tar.gz *
+          cd ..
           echo "SHA256=$(sha256sum dm-mono-nerd-font-${VERSION}.tar.gz | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Create Release
