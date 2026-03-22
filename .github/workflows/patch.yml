@@ -61,3 +61,13 @@ jobs:
             fonts/*.ttf
             dm-mono-nerd-font-*.tar.gz
           generate_release_notes: true
+
+      - name: Trigger Homebrew tap update
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          gh api repos/kilork/homebrew-dm-mono-nerd-font/dispatch \
+            -X POST \
+            -F event_type="update-cask" \
+            -F client_payload[version]="$VERSION" \
+            -F client_payload[sha256]="$SHA256"
+        continue-on-error: true
