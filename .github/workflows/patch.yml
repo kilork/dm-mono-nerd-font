@@ -62,21 +62,6 @@ jobs:
             dm-mono-nerd-font-*.tar.gz
           generate_release_notes: true
 
-      - name: Update Homebrew formula
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION="${GITHUB_REF#refs/tags/v}"
-          
-          cp Formula/dm-mono-nerd-font.rb.tpl Formula/dm-mono-nerd-font.rb
-          sed -i "s/{{VERSION}}/$VERSION/g; s/{{SHA256}}/${SHA256}/g" Formula/dm-mono-nerd-font.rb
-          
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add Formula/dm-mono-nerd-font.rb
-          git commit -m "Update formula to v${VERSION}" || echo "No changes to commit"
-          git push
-
       - name: Update Homebrew tap
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
