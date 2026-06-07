@@ -1,0 +1,7 @@
+# Build outputs
+dm-mono-cyrillic/
+dm-mono-extended/
+dm-mono-nerd-font/
+
+# OS files
+.DS_Store

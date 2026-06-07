@@ -1,7 +1,15 @@
 #!/bin/bash
 set -e
 
-VERSION="${1:-3.4.0}"
+# Auto-detect latest version from GitHub releases, or override via first argument
+if [ -n "$1" ]; then
+  VERSION="$1"
+else
+  VERSION=$(curl -fsSL "https://api.github.com/repos/kilork/dm-mono-nerd-font/releases/latest" \
+    | grep '"tag_name"' \
+    | sed 's/.*"tag_name": "v\(.*\)".*/\1/' 2>/dev/null || echo "1.0.0")
+fi
+
 INSTALL_DIR="${HOME}/.local/share/fonts"
 TEMP_DIR=$(mktemp -d)
 
